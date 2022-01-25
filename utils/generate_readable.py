@@ -63,6 +63,7 @@ def write_texts(messages, outfile):
             
             if current_players != players:
                 current_players = players
+                f.write('\n')
                 f.write(f'Between {current_players}:\n')
 
             if timestep != current_timestep:
