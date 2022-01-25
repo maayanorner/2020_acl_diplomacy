@@ -54,8 +54,8 @@ def write_texts(messages, outfile):
             if message['game_id'] != current_game_id:
                 current_timestep = None
                 current_players = None
-                f.write('-'*10)
                 f.write(f'Game number {message["game_id"]:}\n')
+                f.write('-'*10 + '\n')
                 current_game_id = message['game_id']
 
             timestep = f'{message["year"]}, {message["season"]}'
@@ -69,7 +69,7 @@ def write_texts(messages, outfile):
                 current_timestep = timestep
                 f.write(f'\n{current_timestep}:\n')
                 f.write('-'*4 + '\n')
-            no_long_messages = textwrap.wrap(f'{message["speaker"]}: {message["message"]}\n', width=80)
+            no_long_messages = textwrap.wrap(f'{message["speaker"]}: {message["message"]}\n', width=130)
             pretty_text = '\n'.join(no_long_messages)
             f.write(f'{pretty_text}\n\n')
         
