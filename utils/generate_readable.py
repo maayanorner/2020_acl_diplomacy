@@ -70,7 +70,30 @@ def write_texts(messages, outfile):
                 current_timestep = timestep
                 f.write(f'\n{current_timestep}:\n')
                 f.write('-'*4 + '\n')
-            no_long_messages = textwrap.wrap(f'{message["speaker"]}: {message["message"]}\n', width=130)
+            
+            sender_state = None
+            receiver_state = None
+
+            if message['sender_annotation'] == 'NOANNOTATION':
+                sender_state = 'unknown'
+            elif message['sender_annotation'] == True:
+                sender_state = 'truthful'
+            elif message['sender_annotation'] == False:
+                sender_state = 'deceitful'
+            else:
+                raise ValueError('unknown annotation')
+
+            if message['receiver_annotation'] == 'NOANNOTATION':
+                receiver_state = 'unknown'
+            elif message['receiver_annotation'] == True:
+                receiver_state = 'believing'
+            elif message['receiver_annotation'] == False:
+                receiver_state = 'doubting'
+            else:
+                raise ValueError('unknown annotation')
+
+            f.write(f'# Sender is {sender_state}, receiver is {receiver_state}\n')
+            no_long_messages = textwrap.wrap(f'{message["speaker"]}: {message["message"]}\n', width=90)
             pretty_text = '\n'.join(no_long_messages)
             f.write(f'{pretty_text}\n\n')
         
@@ -87,8 +110,8 @@ if __name__ == '__main__':
 
 
     write_texts(to_readable_full_conversation_format(join(ROOT, 'validation.jsonl')), 
-                                                        join(ROOT, 'validation_conv.text'))
+                                                        join(ROOT, 'validation_conv.txt'))
     write_texts(to_readable_full_conversation_format(join(ROOT, 'train.jsonl')), 
-                                                        join(ROOT, 'train_conv.text'))
+                                                        join(ROOT, 'train_conv.txt'))
     write_texts(to_readable_full_conversation_format(join(ROOT, 'test.jsonl')), 
-                                                        join(ROOT, 'test_conv.text'))
+                                                        join(ROOT, 'test_conv.txt'))
